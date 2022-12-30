@@ -6,7 +6,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-
 func TestReadImgFile(t *testing.T) {
 	dataChanActual := [][]byte{}
 	dataChanTested := [][]byte{}
@@ -16,8 +15,11 @@ func TestReadImgFile(t *testing.T) {
 	readerTested := NewReader()
 	readerActual := NewReader()
 
-	chanActual := readerActual.ReadFile("../../img.jpg", 1024)
-	chanTested := readerTested.ReadFile("../../img.jpg", 1024)
+	chanActual, err := readerActual.ReadFile("../../img.jpg", 1024)
+	assert.Nil(err)
+
+	chanTested, err := readerTested.ReadFile("../../img.jpg", 1024)
+	assert.Nil(err)
 
 	for de := range chanActual {
 		dataChanActual = append(dataChanActual, de)
@@ -30,6 +32,15 @@ func TestReadImgFile(t *testing.T) {
 	assert.Equal(dataChanTested, dataChanActual)
 }
 
+func TestReadError(t *testing.T) {
+
+	reader := NewReader()
+
+	chanActual, err := reader.ReadFile("../../unknown.jpg", 1024)
+	assert.Nil(t, chanActual)
+	assert.NotNil(t, err)
+}
+
 func TestReadTxtFile(t *testing.T) {
 	dataChanActual := [][]byte{}
 	dataChanTested := [][]byte{}
@@ -39,8 +50,11 @@ func TestReadTxtFile(t *testing.T) {
 	readerTested := NewReader()
 	readerActual := NewReader()
 
-	chanActual := readerActual.ReadFile("../../README.md", 1024)
-	chanTested := readerTested.ReadFile("../../README.md", 1024)
+	chanActual, err := readerActual.ReadFile("../../README.md", 1024)
+	assert.Nil(err)
+
+	chanTested, err := readerTested.ReadFile("../../README.md", 1024)
+	assert.Nil(err)
 
 	for de := range chanActual {
 		dataChanActual = append(dataChanActual, de)
@@ -61,7 +75,8 @@ func BenchmarkReadTxtFile(t *testing.B) {
 
 	readerTested := NewReader()
 
-	chanBin := readerTested.ReadFile("../../README.md", 1024)
+	chanBin, _ := readerTested.ReadFile("../../README.md", 1024)
+
 	for d := range chanBin {
 		dataBin = append(dataBin, d)
 	}
@@ -75,7 +90,8 @@ func BenchmarkReadImgFile(t *testing.B) {
 
 	readerTested := NewReader()
 
-	chanBin := readerTested.ReadFile("../../img.jpg", 1024)
+	chanBin, _ := readerTested.ReadFile("../../img.jpg", 1024)
+
 	for d := range chanBin {
 		dataBin = append(dataBin, d)
 	}
@@ -89,7 +105,7 @@ func BenchmarkReadVideoFile(t *testing.B) {
 
 	readerTested := NewReader()
 
-	chanBin := readerTested.ReadFile("../../kambing.mp4", 1000000)
+	chanBin, _ := readerTested.ReadFile("../../kambing.mp4", 1000000)
 	for d := range chanBin {
 		dataBin = append(dataBin, d)
 	}

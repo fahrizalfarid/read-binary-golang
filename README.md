@@ -1,7 +1,10 @@
 [![codecov](https://codecov.io/gh/fahrizalfarid/read-binary-golang/branch/main/graph/badge.svg?token=5CD5X1CEFB)](https://codecov.io/gh/fahrizalfarid/read-binary-golang)
 
 ## Run
-`go run main.go readWrite -i README.md -o text.txt -b 1024`
+```bash
+go run main.go readWrite -i README.md -o text.txt -b 1024
+go run main.go readWrite -i img.jpg -o img.png -b 1024
+```
 
 ## src/usecase/read.go
 ```go
@@ -16,7 +19,7 @@ import (
 type (
 	read struct{}
 	Read interface {
-		ReadFile(filepath string, bufferSize int) <-chan []byte
+		ReadFile(filepath string, bufferSize int) (<-chan []byte, error)
 	}
 )
 
@@ -24,10 +27,10 @@ func NewReader() Read {
 	return &read{}
 }
 
-func (r *read) ReadFile(filepath string, bufferSize int) <-chan []byte {
+func (r *read) ReadFile(filepath string, bufferSize int) (<-chan []byte, error) {
 	f, err := os.Open(filepath)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	bufferChan := make(chan []byte, bufferSize)
@@ -48,7 +51,7 @@ func (r *read) ReadFile(filepath string, bufferSize int) <-chan []byte {
 		}
 	}()
 
-	return bufferChan
+	return bufferChan, nil
 }
 ```
 
@@ -83,10 +86,7 @@ func (w *write) WriteToFile(bufferChan <-chan []byte, output string) error {
 	}()
 
 	for buffer := range bufferChan {
-		_, err := w.buffer.Write(buffer)
-		if err != nil {
-			return err
-		}
+		_, _ = w.buffer.Write(buffer)
 	}
 
 	err := os.WriteFile(output, w.buffer.Bytes(), fs.FileMode(os.O_CREATE))

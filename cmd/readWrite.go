@@ -32,9 +32,12 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("readWrite called")
 
-		buffers := reader.ReadFile(source, bufferSize)
+		buffers, err := reader.ReadFile(source, bufferSize)
+		if err != nil {
+			panic(err)
+		}
 
-		err := writer.WriteToFile(buffers, output)
+		err = writer.WriteToFile(buffers, output)
 		if err != nil {
 			panic(err)
 		}

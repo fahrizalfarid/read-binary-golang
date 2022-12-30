@@ -27,10 +27,7 @@ func (w *write) WriteToFile(bufferChan <-chan []byte, output string) error {
 	}()
 
 	for buffer := range bufferChan {
-		_, err := w.buffer.Write(buffer)
-		if err != nil {
-			return err
-		}
+		_, _ = w.buffer.Write(buffer)
 	}
 
 	err := os.WriteFile(output, w.buffer.Bytes(), fs.FileMode(os.O_CREATE))

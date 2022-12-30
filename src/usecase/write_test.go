@@ -15,8 +15,10 @@ func TestWriteImgFile(t *testing.T) {
 	reader := NewReader()
 	writer := NewWriter()
 
-	chanBin := reader.ReadFile("../../img.jpg", 1024)
-	err := writer.WriteToFile(chanBin, "../../img.png")
+	chanBin, err := reader.ReadFile("../../img.jpg", 1024)
+	assert.Nil(t, err)
+
+	err = writer.WriteToFile(chanBin, "../../img.png")
 	assert.Nil(t, err, "file already exists")
 }
 
@@ -28,9 +30,22 @@ func TestWriteTxtFile(t *testing.T) {
 	reader := NewReader()
 	writer := NewWriter()
 
-	chanBin := reader.ReadFile("../../README.md", 1024)
-	err := writer.WriteToFile(chanBin, "../../README.csv")
+	chanBin, err := reader.ReadFile("../../README.md", 1024)
+	assert.Nil(t, err)
+
+	err = writer.WriteToFile(chanBin, "../../README.csv")
+
 	assert.Nil(t, err, "file already exists")
+}
+
+func TestWriteError(t *testing.T) {
+	reader := NewReader()
+	writer := NewWriter()
+
+	chanBin, _ := reader.ReadFile("../../README.md", 1024)
+
+	err := writer.WriteToFile(chanBin, "")
+	assert.NotNil(t, err, "file already exists")
 }
 
 func BenchmarkWriteImgFile(t *testing.B) {
@@ -41,7 +56,9 @@ func BenchmarkWriteImgFile(t *testing.B) {
 	reader := NewReader()
 	writer := NewWriter()
 
-	chanBin := reader.ReadFile("../../img.jpg", 1024)
+	chanBin, err := reader.ReadFile("../../img.jpg", 1024)
+	assert.Nil(t, err)
+
 	_ = writer.WriteToFile(chanBin, "../../benchmark.png")
 }
 
@@ -53,7 +70,9 @@ func BenchmarkWriteVideoFile(t *testing.B) {
 	reader := NewReader()
 	writer := NewWriter()
 
-	chanBin := reader.ReadFile("../../kambing.mp4", 1000000)
+	chanBin, err := reader.ReadFile("../../kambing.mp4", 1000000)
+	assert.Nil(t, err)
+
 	_ = writer.WriteToFile(chanBin, "../../benchmark.mkv")
 }
 
@@ -65,6 +84,8 @@ func BenchmarkWriteTxtFile(t *testing.B) {
 	reader := NewReader()
 	writer := NewWriter()
 
-	chanBin := reader.ReadFile("../../README.md", 1024)
+	chanBin, err := reader.ReadFile("../../README.md", 1024)
+	assert.Nil(t, err)
+
 	_ = writer.WriteToFile(chanBin, "../../benchmark.csv")
 }

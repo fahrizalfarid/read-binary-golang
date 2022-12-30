@@ -9,7 +9,7 @@ import (
 type (
 	read struct{}
 	Read interface {
-		ReadFile(filepath string, bufferSize int) <-chan []byte
+		ReadFile(filepath string, bufferSize int) (<-chan []byte, error)
 	}
 )
 
@@ -17,10 +17,10 @@ func NewReader() Read {
 	return &read{}
 }
 
-func (r *read) ReadFile(filepath string, bufferSize int) <-chan []byte {
+func (r *read) ReadFile(filepath string, bufferSize int) (<-chan []byte, error) {
 	f, err := os.Open(filepath)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	bufferChan := make(chan []byte, bufferSize)
@@ -41,5 +41,5 @@ func (r *read) ReadFile(filepath string, bufferSize int) <-chan []byte {
 		}
 	}()
 
-	return bufferChan
+	return bufferChan, nil
 }
