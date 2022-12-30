@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/fahrizalfarid/read-binary-golang/branch/main/graph/badge.svg?token=5CD5X1CEFB)](https://codecov.io/gh/fahrizalfarid/read-binary-golang)
+
 ## Run
 `go run main.go readWrite -i README.md -o text.txt -b 1024`
 
