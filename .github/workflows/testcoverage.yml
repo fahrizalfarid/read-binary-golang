@@ -1,0 +1,26 @@
+name: Test and coverage
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 2
+
+    - name: install Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: '1.19'
+    
+    - name: Run test
+      run: go test -v ./src/usecase -coverprofile=coverage.out -covermode=atomic
+    
+    - name: Run coverage
+      uses: codecov/codecov-action@v3
