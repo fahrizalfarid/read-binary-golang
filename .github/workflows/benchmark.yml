@@ -23,6 +23,6 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Benchmark
-      run: go test -timeout=20m -benchmem -benchtime=2x -bench=. ../../src/usecase
+      run: go test -timeout=20m -benchmem -benchtime=2x -bench=. ./src/usecase
 
        
