@@ -1,3 +1,5 @@
+
+[![Test](https://github.com/fahrizalfarid/read-binary-golang/actions/workflows/test.yml/badge.svg)](https://github.com/fahrizalfarid/read-binary-golang/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/fahrizalfarid/read-binary-golang/branch/main/graph/badge.svg?token=5CD5X1CEFB)](https://codecov.io/gh/fahrizalfarid/read-binary-golang)
 
 ## Run
